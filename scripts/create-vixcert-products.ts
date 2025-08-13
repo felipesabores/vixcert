@@ -2,13 +2,12 @@ import { stripe } from "@/lib/stripe"
 
 async function createVixCertProducts() {
   const products = [
-    // Pessoa Física (PF)
+    // Certificados PF (Pessoa Física)
     {
-      name: "Certificado e-CPF A1 - 1 ano",
+      name: "Certificado Digital e-CPF A1 - 1 ano",
       description:
-        "Certificado digital para Pessoa Física modelo A1 com validade de 1 ano. Armazenado em arquivo digital, ideal para uso pessoal e profissional.",
+        "Certificado digital para pessoa física A1 com validade de 1 ano. Armazenado em arquivo digital, oferece praticidade e segurança para suas transações digitais.",
       price: 12000, // R$ 120,00
-      recurring: false,
       metadata: {
         tipo: "PF",
         modelo: "A1",
@@ -18,10 +17,10 @@ async function createVixCertProducts() {
       },
     },
     {
-      name: "Certificado e-CPF A3 - 1 ano (Sem Mídia)",
-      description: "Certificado digital para Pessoa Física modelo A3 com validade de 1 ano. Sem mídia física incluída.",
+      name: "Certificado Digital e-CPF A3 - 1 ano (Sem Mídia)",
+      description:
+        "Certificado digital para pessoa física A3 com validade de 1 ano. Sem mídia física incluída, ideal para quem já possui token ou cartão.",
       price: 13000, // R$ 130,00
-      recurring: false,
       metadata: {
         tipo: "PF",
         modelo: "A3",
@@ -31,11 +30,10 @@ async function createVixCertProducts() {
       },
     },
     {
-      name: "Certificado e-CPF A3 - 1 ano (Cartão)",
+      name: "Certificado Digital e-CPF A3 - 1 ano (Cartão)",
       description:
-        "Certificado digital para Pessoa Física modelo A3 com validade de 1 ano. Inclui cartão criptográfico.",
+        "Certificado digital para pessoa física A3 com validade de 1 ano. Inclui cartão criptográfico para máxima segurança.",
       price: 16000, // R$ 160,00
-      recurring: false,
       metadata: {
         tipo: "PF",
         modelo: "A3",
@@ -45,11 +43,10 @@ async function createVixCertProducts() {
       },
     },
     {
-      name: "Certificado e-CPF A3 - 1 ano (Token)",
+      name: "Certificado Digital e-CPF A3 - 1 ano (Token)",
       description:
-        "Certificado digital para Pessoa Física modelo A3 com validade de 1 ano. Inclui token USB criptográfico.",
+        "Certificado digital para pessoa física A3 com validade de 1 ano. Inclui token USB para portabilidade e segurança máxima.",
       price: 30000, // R$ 300,00
-      recurring: false,
       metadata: {
         tipo: "PF",
         modelo: "A3",
@@ -59,11 +56,10 @@ async function createVixCertProducts() {
       },
     },
     {
-      name: "Certificado e-CPF A3 - 2 anos (Sem Mídia)",
+      name: "Certificado Digital e-CPF A3 - 2 anos (Sem Mídia)",
       description:
-        "Certificado digital para Pessoa Física modelo A3 com validade de 2 anos. Sem mídia física incluída.",
+        "Certificado digital para pessoa física A3 com validade de 2 anos. Sem mídia física incluída, economia a longo prazo.",
       price: 19000, // R$ 190,00
-      recurring: false,
       metadata: {
         tipo: "PF",
         modelo: "A3",
@@ -73,11 +69,10 @@ async function createVixCertProducts() {
       },
     },
     {
-      name: "Certificado e-CPF A3 - 2 anos (Cartão)",
+      name: "Certificado Digital e-CPF A3 - 2 anos (Cartão)",
       description:
-        "Certificado digital para Pessoa Física modelo A3 com validade de 2 anos. Inclui cartão criptográfico.",
+        "Certificado digital para pessoa física A3 com validade de 2 anos. Inclui cartão criptográfico, melhor custo-benefício.",
       price: 22000, // R$ 220,00
-      recurring: false,
       metadata: {
         tipo: "PF",
         modelo: "A3",
@@ -87,11 +82,10 @@ async function createVixCertProducts() {
       },
     },
     {
-      name: "Certificado e-CPF A3 - 2 anos (Token)",
+      name: "Certificado Digital e-CPF A3 - 2 anos (Token)",
       description:
-        "Certificado digital para Pessoa Física modelo A3 com validade de 2 anos. Inclui token USB criptográfico.",
+        "Certificado digital para pessoa física A3 com validade de 2 anos. Token USB incluído para máxima praticidade.",
       price: 34000, // R$ 340,00
-      recurring: false,
       metadata: {
         tipo: "PF",
         modelo: "A3",
@@ -101,11 +95,10 @@ async function createVixCertProducts() {
       },
     },
     {
-      name: "Certificado e-CPF A3 - 3 anos (Sem Mídia)",
+      name: "Certificado Digital e-CPF A3 - 3 anos (Sem Mídia)",
       description:
-        "Certificado digital para Pessoa Física modelo A3 com validade de 3 anos. Sem mídia física incluída.",
+        "Certificado digital para pessoa física A3 com validade de 3 anos. Sem mídia física, máxima economia a longo prazo.",
       price: 23500, // R$ 235,00
-      recurring: false,
       metadata: {
         tipo: "PF",
         modelo: "A3",
@@ -115,11 +108,10 @@ async function createVixCertProducts() {
       },
     },
     {
-      name: "Certificado e-CPF A3 - 3 anos (Cartão)",
+      name: "Certificado Digital e-CPF A3 - 3 anos (Cartão)",
       description:
-        "Certificado digital para Pessoa Física modelo A3 com validade de 3 anos. Inclui cartão criptográfico.",
+        "Certificado digital para pessoa física A3 com validade de 3 anos. Inclui cartão criptográfico, excelente investimento.",
       price: 25000, // R$ 250,00
-      recurring: false,
       metadata: {
         tipo: "PF",
         modelo: "A3",
@@ -129,11 +121,10 @@ async function createVixCertProducts() {
       },
     },
     {
-      name: "Certificado e-CPF A3 - 3 anos (Cartão + Leitora)",
+      name: "Certificado Digital e-CPF A3 - 3 anos (Cartão + Leitora)",
       description:
-        "Certificado digital para Pessoa Física modelo A3 com validade de 3 anos. Inclui cartão criptográfico e leitora.",
+        "Certificado digital para pessoa física A3 com validade de 3 anos. Cartão + leitora incluída, kit completo para uso imediato.",
       price: 36500, // R$ 365,00
-      recurring: false,
       metadata: {
         tipo: "PF",
         modelo: "A3",
@@ -143,11 +134,10 @@ async function createVixCertProducts() {
       },
     },
     {
-      name: "Certificado e-CPF A3 - 3 anos (Token)",
+      name: "Certificado Digital e-CPF A3 - 3 anos (Token)",
       description:
-        "Certificado digital para Pessoa Física modelo A3 com validade de 3 anos. Inclui token USB criptográfico.",
+        "Certificado digital para pessoa física A3 com validade de 3 anos. Token USB premium, máxima durabilidade e segurança.",
       price: 36500, // R$ 365,00
-      recurring: false,
       metadata: {
         tipo: "PF",
         modelo: "A3",
@@ -156,13 +146,13 @@ async function createVixCertProducts() {
         categoria: "e-CPF",
       },
     },
-    // Pessoa Jurídica (PJ)
+
+    // Certificados PJ (Pessoa Jurídica)
     {
-      name: "Certificado e-CNPJ A1 - 1 ano",
+      name: "Certificado Digital e-CNPJ A1 - 1 ano",
       description:
-        "Certificado digital para Pessoa Jurídica modelo A1 com validade de 1 ano. Armazenado em arquivo digital, ideal para empresas.",
+        "Certificado digital para pessoa jurídica A1 com validade de 1 ano. Arquivo digital prático para empresas de pequeno porte.",
       price: 18000, // R$ 180,00
-      recurring: false,
       metadata: {
         tipo: "PJ",
         modelo: "A1",
@@ -172,11 +162,10 @@ async function createVixCertProducts() {
       },
     },
     {
-      name: "Certificado e-CNPJ A3 - 1 ano (Sem Mídia)",
+      name: "Certificado Digital e-CNPJ A3 - 1 ano (Sem Mídia)",
       description:
-        "Certificado digital para Pessoa Jurídica modelo A3 com validade de 1 ano. Sem mídia física incluída.",
+        "Certificado digital para pessoa jurídica A3 com validade de 1 ano. Sem mídia física incluída, para empresas que já possuem hardware.",
       price: 19000, // R$ 190,00
-      recurring: false,
       metadata: {
         tipo: "PJ",
         modelo: "A3",
@@ -186,11 +175,10 @@ async function createVixCertProducts() {
       },
     },
     {
-      name: "Certificado e-CNPJ A3 - 1 ano (Cartão)",
+      name: "Certificado Digital e-CNPJ A3 - 1 ano (Cartão)",
       description:
-        "Certificado digital para Pessoa Jurídica modelo A3 com validade de 1 ano. Inclui cartão criptográfico.",
+        "Certificado digital para pessoa jurídica A3 com validade de 1 ano. Cartão criptográfico para segurança empresarial.",
       price: 22000, // R$ 220,00
-      recurring: false,
       metadata: {
         tipo: "PJ",
         modelo: "A3",
@@ -200,11 +188,10 @@ async function createVixCertProducts() {
       },
     },
     {
-      name: "Certificado e-CNPJ A3 - 1 ano (Token)",
+      name: "Certificado Digital e-CNPJ A3 - 1 ano (Token)",
       description:
-        "Certificado digital para Pessoa Jurídica modelo A3 com validade de 1 ano. Inclui token USB criptográfico.",
+        "Certificado digital para pessoa jurídica A3 com validade de 1 ano. Token USB empresarial de alta segurança.",
       price: 34000, // R$ 340,00
-      recurring: false,
       metadata: {
         tipo: "PJ",
         modelo: "A3",
@@ -214,11 +201,10 @@ async function createVixCertProducts() {
       },
     },
     {
-      name: "Certificado e-CNPJ A3 - 2 anos (Sem Mídia)",
+      name: "Certificado Digital e-CNPJ A3 - 2 anos (Sem Mídia)",
       description:
-        "Certificado digital para Pessoa Jurídica modelo A3 com validade de 2 anos. Sem mídia física incluída.",
+        "Certificado digital para pessoa jurídica A3 com validade de 2 anos. Sem mídia física, economia para empresas.",
       price: 28000, // R$ 280,00
-      recurring: false,
       metadata: {
         tipo: "PJ",
         modelo: "A3",
@@ -228,11 +214,10 @@ async function createVixCertProducts() {
       },
     },
     {
-      name: "Certificado e-CNPJ A3 - 2 anos (Cartão)",
+      name: "Certificado Digital e-CNPJ A3 - 2 anos (Cartão)",
       description:
-        "Certificado digital para Pessoa Jurídica modelo A3 com validade de 2 anos. Inclui cartão criptográfico.",
+        "Certificado digital para pessoa jurídica A3 com validade de 2 anos. Cartão criptográfico, custo-benefício empresarial.",
       price: 31500, // R$ 315,00
-      recurring: false,
       metadata: {
         tipo: "PJ",
         modelo: "A3",
@@ -242,11 +227,10 @@ async function createVixCertProducts() {
       },
     },
     {
-      name: "Certificado e-CNPJ A3 - 2 anos (Token)",
+      name: "Certificado Digital e-CNPJ A3 - 2 anos (Token)",
       description:
-        "Certificado digital para Pessoa Jurídica modelo A3 com validade de 2 anos. Inclui token USB criptográfico.",
+        "Certificado digital para pessoa jurídica A3 com validade de 2 anos. Token USB empresarial, praticidade e segurança.",
       price: 40000, // R$ 400,00
-      recurring: false,
       metadata: {
         tipo: "PJ",
         modelo: "A3",
@@ -256,11 +240,10 @@ async function createVixCertProducts() {
       },
     },
     {
-      name: "Certificado e-CNPJ A3 - 3 anos (Sem Mídia)",
+      name: "Certificado Digital e-CNPJ A3 - 3 anos (Sem Mídia)",
       description:
-        "Certificado digital para Pessoa Jurídica modelo A3 com validade de 3 anos. Sem mídia física incluída.",
+        "Certificado digital para pessoa jurídica A3 com validade de 3 anos. Sem mídia física, máxima economia empresarial.",
       price: 31000, // R$ 310,00
-      recurring: false,
       metadata: {
         tipo: "PJ",
         modelo: "A3",
@@ -270,11 +253,10 @@ async function createVixCertProducts() {
       },
     },
     {
-      name: "Certificado e-CNPJ A3 - 3 anos (Cartão)",
+      name: "Certificado Digital e-CNPJ A3 - 3 anos (Cartão)",
       description:
-        "Certificado digital para Pessoa Jurídica modelo A3 com validade de 3 anos. Inclui cartão criptográfico.",
+        "Certificado digital para pessoa jurídica A3 com validade de 3 anos. Cartão criptográfico, investimento de longo prazo.",
       price: 34000, // R$ 340,00
-      recurring: false,
       metadata: {
         tipo: "PJ",
         modelo: "A3",
@@ -284,11 +266,10 @@ async function createVixCertProducts() {
       },
     },
     {
-      name: "Certificado e-CNPJ A3 - 3 anos (Cartão + Leitora)",
+      name: "Certificado Digital e-CNPJ A3 - 3 anos (Cartão + Leitora)",
       description:
-        "Certificado digital para Pessoa Jurídica modelo A3 com validade de 3 anos. Inclui cartão criptográfico e leitora.",
+        "Certificado digital para pessoa jurídica A3 com validade de 3 anos. Kit completo com cartão e leitora para uso empresarial.",
       price: 44000, // R$ 440,00
-      recurring: false,
       metadata: {
         tipo: "PJ",
         modelo: "A3",
@@ -298,11 +279,10 @@ async function createVixCertProducts() {
       },
     },
     {
-      name: "Certificado e-CNPJ A3 - 3 anos (Token)",
+      name: "Certificado Digital e-CNPJ A3 - 3 anos (Token)",
       description:
-        "Certificado digital para Pessoa Jurídica modelo A3 com validade de 3 anos. Inclui token USB criptográfico.",
+        "Certificado digital para pessoa jurídica A3 com validade de 3 anos. Token USB premium empresarial, máxima durabilidade.",
       price: 44000, // R$ 440,00
-      recurring: false,
       metadata: {
         tipo: "PJ",
         modelo: "A3",
@@ -313,6 +293,8 @@ async function createVixCertProducts() {
     },
   ]
 
+  console.log("Iniciando criação dos produtos VixCert...")
+
   for (const product of products) {
     try {
       const stripeProduct = await stripe.products.create({
@@ -321,7 +303,7 @@ async function createVixCertProducts() {
         metadata: product.metadata,
       })
 
-      await stripe.prices.create({
+      const stripePrice = await stripe.prices.create({
         product: stripeProduct.id,
         unit_amount: product.price,
         currency: "brl",
@@ -333,7 +315,7 @@ async function createVixCertProducts() {
     }
   }
 
-  console.log("\n🎉 Processo de criação de produtos concluído!")
+  console.log("Criação de produtos concluída!")
 }
 
 createVixCertProducts().catch(console.error)
