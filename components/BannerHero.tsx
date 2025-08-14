@@ -3,49 +3,73 @@
 import type React from "react"
 
 import { useState, useEffect, useCallback } from "react"
-import Image from "next/image"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import Image from "next/image"
 
-interface Banner {
+interface BannerSlide {
   id: number
   title: string
   subtitle: string
   description: string
-  ctaText: string
-  ctaLink: string
-  image: {
-    desktop: string
-    mobile: string
-  }
-  background: string
+  buttonText: string
+  buttonLink: string
+  imageDesktop: string
+  imageMobile: string
+  backgroundColor: string
 }
 
-interface BannerHeroProps {
-  banners: Banner[]
-  autoPlayInterval?: number
-  showNavigation?: boolean
-  showIndicators?: boolean
-}
+const slides: BannerSlide[] = [
+  {
+    id: 1,
+    title: "Certificado Digital VixCert",
+    subtitle: "Segurança e Praticidade",
+    description:
+      "Obtenha seu certificado digital com a máxima segurança e praticidade. Processo 100% online com suporte especializado.",
+    buttonText: "Comprar Agora",
+    buttonLink: "/produtos",
+    imageDesktop: "/placeholder.svg?height=600&width=800",
+    imageMobile: "/placeholder.svg?height=400&width=600",
+    backgroundColor: "bg-gradient-to-r from-blue-600 to-blue-800",
+  },
+  {
+    id: 2,
+    title: "e-CPF e e-CNPJ",
+    subtitle: "Para Pessoa Física e Jurídica",
+    description:
+      "Certificados A1 e A3 com diferentes períodos de validade. Escolha a melhor opção para suas necessidades.",
+    buttonText: "Ver Produtos",
+    buttonLink: "/certificados",
+    imageDesktop: "/placeholder.svg?height=600&width=800",
+    imageMobile: "/placeholder.svg?height=400&width=600",
+    backgroundColor: "bg-gradient-to-r from-orange-500 to-orange-700",
+  },
+  {
+    id: 3,
+    title: "Suporte Especializado",
+    subtitle: "Atendimento Personalizado",
+    description: "Nossa equipe está pronta para ajudar você em todo o processo. Agende seu atendimento presencial.",
+    buttonText: "Agendar",
+    buttonLink: "/agendar",
+    imageDesktop: "/placeholder.svg?height=600&width=800",
+    imageMobile: "/placeholder.svg?height=400&width=600",
+    backgroundColor: "bg-gradient-to-r from-green-600 to-green-800",
+  },
+]
 
-export default function BannerHero({
-  banners,
-  autoPlayInterval = 5000,
-  showNavigation = true,
-  showIndicators = true,
-}: BannerHeroProps) {
+export default function BannerHero() {
   const [currentSlide, setCurrentSlide] = useState(0)
   const [isAutoPlaying, setIsAutoPlaying] = useState(true)
   const [touchStart, setTouchStart] = useState<number | null>(null)
   const [touchEnd, setTouchEnd] = useState<number | null>(null)
 
   const nextSlide = useCallback(() => {
-    setCurrentSlide((prev) => (prev + 1) % banners.length)
-  }, [banners.length])
+    setCurrentSlide((prev) => (prev + 1) % slides.length)
+  }, [])
 
   const prevSlide = useCallback(() => {
-    setCurrentSlide((prev) => (prev - 1 + banners.length) % banners.length)
-  }, [banners.length])
+    setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length)
+  }, [])
 
   const goToSlide = useCallback((index: number) => {
     setCurrentSlide(index)
@@ -55,9 +79,9 @@ export default function BannerHero({
   useEffect(() => {
     if (!isAutoPlaying) return
 
-    const interval = setInterval(nextSlide, autoPlayInterval)
+    const interval = setInterval(nextSlide, 5000)
     return () => clearInterval(interval)
-  }, [nextSlide, autoPlayInterval, isAutoPlaying])
+  }, [isAutoPlaying, nextSlide])
 
   // Touch handlers for mobile swipe
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -76,128 +100,124 @@ export default function BannerHero({
     const isLeftSwipe = distance > 50
     const isRightSwipe = distance < -50
 
-    if (isLeftSwipe) nextSlide()
-    if (isRightSwipe) prevSlide()
+    if (isLeftSwipe) {
+      nextSlide()
+    } else if (isRightSwipe) {
+      prevSlide()
+    }
   }
 
-  const pauseAutoPlay = () => setIsAutoPlaying(false)
-  const resumeAutoPlay = () => setIsAutoPlaying(true)
+  const currentSlideData = slides[currentSlide]
 
   return (
-    <div className="relative w-full overflow-hidden">
+    <div className="relative w-full h-[300px] sm:h-[400px] md:h-[500px] lg:h-[600px] overflow-hidden">
+      {/* Background with gradient */}
       <div
-        className="relative h-[300px] sm:h-[400px] md:h-[500px] lg:h-[600px]"
-        onMouseEnter={pauseAutoPlay}
-        onMouseLeave={resumeAutoPlay}
+        className={`absolute inset-0 ${currentSlideData.backgroundColor} transition-all duration-1000 ease-in-out`}
+      />
+
+      {/* Main content container */}
+      <div
+        className="relative h-full flex items-center"
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
+        onMouseEnter={() => setIsAutoPlaying(false)}
+        onMouseLeave={() => setIsAutoPlaying(true)}
       >
-        {banners.map((banner, index) => (
-          <div
-            key={banner.id}
-            className={`absolute inset-0 transition-all duration-1000 ease-in-out ${
-              index === currentSlide
-                ? "opacity-100 translate-x-0"
-                : index < currentSlide
-                  ? "opacity-0 -translate-x-full"
-                  : "opacity-0 translate-x-full"
-            }`}
-            style={{ backgroundColor: banner.background }}
-          >
-            {/* Background Image */}
-            <div className="absolute inset-0">
-              <Image
-                src={banner.image.desktop || "/placeholder.svg"}
-                alt={banner.title}
-                fill
-                className="hidden sm:block object-cover object-center"
-                priority={index === 0}
-                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 100vw"
-              />
-              <Image
-                src={banner.image.mobile || "/placeholder.svg"}
-                alt={banner.title}
-                fill
-                className="sm:hidden object-cover object-center"
-                priority={index === 0}
-                sizes="100vw"
-              />
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+            {/* Text content */}
+            <div className="text-white space-y-4 sm:space-y-6 text-center lg:text-left">
+              <div className="space-y-2 sm:space-y-4">
+                <h2 className="text-sm sm:text-base font-medium text-white/80 uppercase tracking-wider">
+                  {currentSlideData.subtitle}
+                </h2>
+                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold leading-tight">
+                  {currentSlideData.title}
+                </h1>
+                <p className="text-base sm:text-lg md:text-xl text-white/90 max-w-2xl mx-auto lg:mx-0">
+                  {currentSlideData.description}
+                </p>
+              </div>
+
+              <div className="pt-4">
+                <Button
+                  size="lg"
+                  className="w-full sm:w-auto bg-white text-gray-900 hover:bg-gray-100 font-semibold px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg transition-all duration-300 transform hover:scale-105"
+                  onClick={() => (window.location.href = currentSlideData.buttonLink)}
+                >
+                  {currentSlideData.buttonText}
+                </Button>
+              </div>
             </div>
 
-            {/* Content Overlay */}
-            <div className="relative z-10 flex items-center justify-center h-full bg-black/20">
-              <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="max-w-4xl mx-auto text-center text-white">
-                  <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold mb-4 sm:mb-6 leading-tight">
-                    {banner.title}
-                  </h1>
-
-                  <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl mb-4 sm:mb-6 font-medium opacity-90">
-                    {banner.subtitle}
-                  </p>
-
-                  <p className="text-sm sm:text-base md:text-lg lg:text-xl mb-6 sm:mb-8 max-w-2xl mx-auto opacity-80 leading-relaxed">
-                    {banner.description}
-                  </p>
-
-                  <Button
-                    asChild
-                    size="lg"
-                    className="w-full sm:w-auto text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300"
-                  >
-                    <a href={banner.ctaLink}>{banner.ctaText}</a>
-                  </Button>
-                </div>
+            {/* Image */}
+            <div className="relative h-[200px] sm:h-[250px] md:h-[300px] lg:h-[400px] flex items-center justify-center">
+              <div className="relative w-full h-full max-w-md lg:max-w-lg">
+                {/* Desktop image */}
+                <Image
+                  src={currentSlideData.imageDesktop || "/placeholder.svg"}
+                  alt={currentSlideData.title}
+                  fill
+                  className="hidden sm:block object-contain transition-all duration-1000 ease-in-out"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  priority
+                />
+                {/* Mobile image */}
+                <Image
+                  src={currentSlideData.imageMobile || "/placeholder.svg"}
+                  alt={currentSlideData.title}
+                  fill
+                  className="block sm:hidden object-contain transition-all duration-1000 ease-in-out"
+                  sizes="100vw"
+                  priority
+                />
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Navigation arrows - hidden on very small screens */}
+        <Button
+          variant="ghost"
+          size="icon"
+          className="hidden sm:flex absolute left-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 text-white border-0 w-10 h-10 md:w-12 md:h-12"
+          onClick={prevSlide}
+          aria-label="Slide anterior"
+        >
+          <ChevronLeft className="w-5 h-5 md:w-6 md:h-6 flex-shrink-0" />
+        </Button>
+
+        <Button
+          variant="ghost"
+          size="icon"
+          className="hidden sm:flex absolute right-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 text-white border-0 w-10 h-10 md:w-12 md:h-12"
+          onClick={nextSlide}
+          aria-label="Próximo slide"
+        >
+          <ChevronRight className="w-5 h-5 md:w-6 md:h-6 flex-shrink-0" />
+        </Button>
+      </div>
+
+      {/* Slide indicators */}
+      <div className="absolute bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 flex space-x-2">
+        {slides.map((_, index) => (
+          <button
+            key={index}
+            className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-all duration-300 ${
+              index === currentSlide ? "bg-white scale-125" : "bg-white/50 hover:bg-white/75"
+            }`}
+            onClick={() => goToSlide(index)}
+            aria-label={`Ir para slide ${index + 1}`}
+          />
         ))}
       </div>
 
-      {/* Navigation Arrows */}
-      {showNavigation && banners.length > 1 && (
-        <>
-          <button
-            onClick={prevSlide}
-            className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-20 hidden sm:flex items-center justify-center w-10 h-10 md:w-12 md:h-12 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full transition-all duration-300 group"
-            aria-label="Slide anterior"
-          >
-            <ChevronLeft className="w-5 h-5 md:w-6 md:h-6 text-white group-hover:scale-110 transition-transform" />
-          </button>
-
-          <button
-            onClick={nextSlide}
-            className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-20 hidden sm:flex items-center justify-center w-10 h-10 md:w-12 md:h-12 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full transition-all duration-300 group"
-            aria-label="Próximo slide"
-          >
-            <ChevronRight className="w-5 h-5 md:w-6 md:h-6 text-white group-hover:scale-110 transition-transform" />
-          </button>
-        </>
-      )}
-
       {/* Mobile swipe indicator */}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 sm:hidden">
-        <p className="text-white/80 text-xs bg-black/20 px-3 py-1 rounded-full backdrop-blur-sm">
-          Deslize para navegar
-        </p>
+      <div className="absolute bottom-2 left-1/2 -translate-x-1/2 sm:hidden">
+        <p className="text-white/60 text-xs">Deslize para navegar</p>
       </div>
-
-      {/* Slide Indicators */}
-      {showIndicators && banners.length > 1 && (
-        <div className="absolute bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-20 flex space-x-2">
-          {banners.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => goToSlide(index)}
-              className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-all duration-300 ${
-                index === currentSlide ? "bg-white scale-125" : "bg-white/50 hover:bg-white/70"
-              }`}
-              aria-label={`Ir para slide ${index + 1}`}
-            />
-          ))}
-        </div>
-      )}
     </div>
   )
 }

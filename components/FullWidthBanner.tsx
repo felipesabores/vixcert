@@ -2,211 +2,147 @@
 
 import type React from "react"
 
-import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { CheckCircle, ArrowRight } from "lucide-react"
+import Image from "next/image"
+import { ArrowRight, Shield, Clock, Users } from "lucide-react"
 
-interface Feature {
-  icon?: React.ReactNode
-  text: string
-}
-
-interface FullWidthBannerProps {
+interface BannerProps {
   title: string
   subtitle?: string
   description: string
-  features?: Feature[]
-  ctaText: string
-  ctaLink: string
-  backgroundImage?: {
-    desktop: string
-    mobile: string
-  }
+  buttonText: string
+  buttonLink: string
+  imageDesktop: string
+  imageMobile: string
   backgroundColor?: string
-  textColor?: "light" | "dark"
-  layout?: "centered" | "split"
-  className?: string
+  features?: Array<{
+    icon: React.ReactNode
+    title: string
+    description: string
+  }>
 }
 
 export default function FullWidthBanner({
   title,
   subtitle,
   description,
-  features = [],
-  ctaText,
-  ctaLink,
-  backgroundImage,
+  buttonText,
+  buttonLink,
+  imageDesktop,
+  imageMobile,
   backgroundColor = "bg-gradient-to-r from-blue-600 to-blue-800",
-  textColor = "light",
-  layout = "centered",
-  className = "",
-}: FullWidthBannerProps) {
-  const textColorClasses = textColor === "light" ? "text-white" : "text-gray-900"
-  const overlayClasses = textColor === "light" ? "bg-black/40" : "bg-white/80"
+  features,
+}: BannerProps) {
+  const defaultFeatures = [
+    {
+      icon: <Shield className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0" />,
+      title: "Máxima Segurança",
+      description: "Certificados com criptografia de alta segurança",
+    },
+    {
+      icon: <Clock className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0" />,
+      title: "Processo Rápido",
+      description: "Emissão em até 24 horas úteis",
+    },
+    {
+      icon: <Users className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0" />,
+      title: "Suporte Especializado",
+      description: "Atendimento personalizado e presencial",
+    },
+  ]
 
-  if (layout === "split") {
-    return (
-      <section className={`relative w-full overflow-hidden ${className}`}>
-        {backgroundImage && (
-          <div className="absolute inset-0">
-            <Image
-              src={backgroundImage.desktop || "/placeholder.svg"}
-              alt={title}
-              fill
-              className="hidden md:block object-cover object-center"
-              sizes="100vw"
-            />
-            <Image
-              src={backgroundImage.mobile || "/placeholder.svg"}
-              alt={title}
-              fill
-              className="md:hidden object-cover object-center"
-              sizes="100vw"
-            />
-            <div className={`absolute inset-0 ${overlayClasses}`} />
-          </div>
-        )}
+  const displayFeatures = features || defaultFeatures
 
-        <div className={`relative z-10 min-h-[500px] md:min-h-[600px] ${!backgroundImage ? backgroundColor : ""}`}>
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8 h-full">
-            <div className="grid md:grid-cols-2 gap-8 lg:gap-12 items-center min-h-[500px] md:min-h-[600px]">
-              {/* Content Side */}
-              <div className={`space-y-6 ${textColorClasses} py-12 md:py-16`}>
-                {subtitle && (
-                  <p className="text-sm sm:text-base font-medium uppercase tracking-wider opacity-80">{subtitle}</p>
-                )}
+  return (
+    <div className={`relative w-full ${backgroundColor} overflow-hidden`}>
+      {/* Background pattern */}
+      <div className="absolute inset-0 bg-black/10" />
+      <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-black/20" />
 
-                <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">{title}</h2>
-
-                <p className="text-base sm:text-lg md:text-xl leading-relaxed opacity-90 max-w-lg">{description}</p>
-
-                {features.length > 0 && (
-                  <ul className="space-y-3 md:space-y-4">
-                    {features.map((feature, index) => (
-                      <li key={index} className="flex items-start gap-3">
-                        <div className="flex-shrink-0 mt-1">
-                          {feature.icon || (
-                            <CheckCircle
-                              className={`w-5 h-5 ${textColor === "light" ? "text-green-400" : "text-green-600"}`}
-                            />
-                          )}
-                        </div>
-                        <span className="text-sm sm:text-base md:text-lg">{feature.text}</span>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-
-                <div className="pt-4">
-                  <Button
-                    asChild
-                    size="lg"
-                    className="w-full sm:w-auto text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 bg-white text-blue-600 hover:bg-gray-100 font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 group"
-                  >
-                    <a href={ctaLink} className="inline-flex items-center gap-2">
-                      {ctaText}
-                      <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                    </a>
-                  </Button>
+      <div className="relative">
+        {/* Main banner section */}
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+            {/* Content */}
+            <div className="text-white space-y-6 sm:space-y-8 text-center lg:text-left">
+              {subtitle && (
+                <div className="inline-block">
+                  <span className="text-sm sm:text-base font-medium text-white/80 uppercase tracking-wider bg-white/10 px-3 py-1 rounded-full">
+                    {subtitle}
+                  </span>
                 </div>
+              )}
+
+              <div className="space-y-4 sm:space-y-6">
+                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">{title}</h1>
+                <p className="text-lg sm:text-xl md:text-2xl text-white/90 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+                  {description}
+                </p>
               </div>
 
-              {/* Visual Side */}
-              <div className="relative">
-                <Card className="bg-white/10 backdrop-blur-sm border-white/20">
-                  <CardContent className="p-6 sm:p-8">
-                    <div className="text-center space-y-4">
-                      <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto bg-white/20 rounded-full flex items-center justify-center">
-                        <CheckCircle className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
-                      </div>
-                      <h3 className="text-lg sm:text-xl font-semibold text-white">Certificação Digital Segura</h3>
-                      <p className="text-white/80 text-sm sm:text-base">
-                        Tecnologia de ponta para proteger suas transações digitais
-                      </p>
-                    </div>
-                  </CardContent>
-                </Card>
+              <div className="pt-4 sm:pt-6">
+                <Button
+                  size="lg"
+                  className="w-full sm:w-auto bg-white text-gray-900 hover:bg-gray-100 font-semibold px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg transition-all duration-300 transform hover:scale-105 group"
+                  onClick={() => (window.location.href = buttonLink)}
+                >
+                  {buttonText}
+                  <ArrowRight className="ml-2 w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 transition-transform group-hover:translate-x-1" />
+                </Button>
+              </div>
+            </div>
+
+            {/* Image */}
+            <div className="relative h-[300px] sm:h-[400px] lg:h-[500px] flex items-center justify-center">
+              <div className="relative w-full h-full max-w-lg">
+                {/* Desktop image */}
+                <Image
+                  src={imageDesktop || "/placeholder.svg"}
+                  alt={title}
+                  fill
+                  className="hidden sm:block object-contain drop-shadow-2xl"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  priority
+                />
+                {/* Mobile image */}
+                <Image
+                  src={imageMobile || "/placeholder.svg"}
+                  alt={title}
+                  fill
+                  className="block sm:hidden object-contain drop-shadow-2xl"
+                  sizes="100vw"
+                  priority
+                />
               </div>
             </div>
           </div>
         </div>
-      </section>
-    )
-  }
 
-  // Centered layout
-  return (
-    <section className={`relative w-full overflow-hidden ${className}`}>
-      {backgroundImage && (
-        <div className="absolute inset-0">
-          <Image
-            src={backgroundImage.desktop || "/placeholder.svg"}
-            alt={title}
-            fill
-            className="hidden sm:block object-cover object-center"
-            sizes="100vw"
-          />
-          <Image
-            src={backgroundImage.mobile || "/placeholder.svg"}
-            alt={title}
-            fill
-            className="sm:hidden object-cover object-center"
-            sizes="100vw"
-          />
-          <div className={`absolute inset-0 ${overlayClasses}`} />
-        </div>
-      )}
-
-      <div className={`relative z-10 py-16 sm:py-20 md:py-24 lg:py-32 ${!backgroundImage ? backgroundColor : ""}`}>
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className={`max-w-4xl mx-auto text-center space-y-6 sm:space-y-8 ${textColorClasses}`}>
-            {subtitle && (
-              <p className="text-sm sm:text-base font-medium uppercase tracking-wider opacity-80">{subtitle}</p>
-            )}
-
-            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">{title}</h2>
-
-            <p className="text-base sm:text-lg md:text-xl lg:text-2xl leading-relaxed opacity-90 max-w-3xl mx-auto">
-              {description}
-            </p>
-
-            {features.length > 0 && (
-              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 pt-6 sm:pt-8">
-                {features.map((feature, index) => (
-                  <Card key={index} className="bg-white/10 backdrop-blur-sm border-white/20">
-                    <CardContent className="p-4 sm:p-6">
-                      <div className="flex items-center gap-3 text-left">
-                        <div className="flex-shrink-0">
-                          {feature.icon || (
-                            <CheckCircle
-                              className={`w-5 h-5 ${textColor === "light" ? "text-green-400" : "text-green-600"}`}
-                            />
-                          )}
-                        </div>
-                        <span className="text-sm sm:text-base font-medium">{feature.text}</span>
+        {/* Features section */}
+        <div className="border-t border-white/20 bg-black/10">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+              {displayFeatures.map((feature, index) => (
+                <Card
+                  key={index}
+                  className="bg-white/10 border-white/20 backdrop-blur-sm hover:bg-white/15 transition-all duration-300"
+                >
+                  <CardContent className="p-4 sm:p-6">
+                    <div className="flex items-start space-x-3 sm:space-x-4">
+                      <div className="text-white/90 mt-1">{feature.icon}</div>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="text-white font-semibold text-base sm:text-lg mb-2">{feature.title}</h3>
+                        <p className="text-white/80 text-sm sm:text-base leading-relaxed">{feature.description}</p>
                       </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            )}
-
-            <div className="pt-6 sm:pt-8">
-              <Button
-                asChild
-                size="lg"
-                className="w-full sm:w-auto text-base sm:text-lg px-8 sm:px-10 py-4 sm:py-5 bg-white text-blue-600 hover:bg-gray-100 font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 group"
-              >
-                <a href={ctaLink} className="inline-flex items-center gap-2">
-                  {ctaText}
-                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                </a>
-              </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
           </div>
         </div>
       </div>
-    </section>
+    </div>
   )
 }

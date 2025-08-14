@@ -1,177 +1,163 @@
-import { Metadata } from 'next'
-import FullWidthBanner from '@/components/FullWidthBanner'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { CheckCircle, Shield, Clock, Building, FileText, Zap, Users, TrendingUp } from 'lucide-react'
-
-export const metadata: Metadata = {
-  title: 'Certificado Digital para Pessoa Jurídica | VixCert',
-  description: 'Certificado digital A1 e A3 para empresas. Agilize processos fiscais, tributários e contratuais com máxima segurança.',
-}
-
-const certificateTypes = [
-  {
-    type: 'A1',
-    name: 'Certificado A1 - PJ',
-    validity: '1 ano',
-    price: 'R$ 280,00',
-    storage: 'Computador',
-    features: [
-      'Instalação em até 3 computadores',
-      'Ideal para uso frequente',
-      'Backup automático',
-      'Suporte técnico incluído',
-      'Integração com sistemas ERP'
-    ],
-    recommended: false
-  },
-  {
-    type: 'A3',
-    name: 'Certificado A3 - PJ',
-    validity: '1 a 3 anos',
-    price: 'A partir de R$ 380,00',
-    storage: 'Token/Cartão',
-    features: [
-      'Máxima segurança empresarial',
-      'Portabilidade total',
-      'Uso em qualquer computador',
-      'Proteção por PIN',
-      'Ideal para múltiplos usuários'
-    ],
-    recommended: true
-  }
-]
-
-const benefits = [
-  {
-    icon: Shield,
-    title: 'Segurança Empresarial',
-    description: 'Proteja suas transações e documentos corporativos com criptografia de nível bancário.'
-  },
-  {
-    icon: Zap,
-    title: 'Agilidade nos Processos',
-    description: 'Acelere processos fiscais, tributários e contratuais com assinatura digital instantânea.'
-  },
-  {
-    icon: FileText,
-    title: 'Conformidade Legal',
-    description: 'Atenda todas as exigências legais e regulamentares com documentos digitalmente válidos.'
-  },
-  {
-    icon: TrendingUp,
-    title: 'Redução de Custos',
-    description: 'Elimine custos com papel, impressão, correio e armazenamento físico de documentos.'
-  },
-  {
-    icon: Users,
-    title: 'Gestão Centralizada',
-    description: 'Gerencie certificados de toda a empresa de forma centralizada e eficiente.'
-  },
-  {
-    icon: Clock,
-    title: 'Disponibilidade 24/7',
-    description: 'Realize operações importantes a qualquer hora, sem depender de horário comercial.'
-  }
-]
-
-const useCases = [
-  'Nota Fiscal Eletrônica (NFe)',
-  'Escrituração Fiscal Digital (EFD)',
-  'eSocial e folha de pagamento',
-  'Declarações fiscais (DCTF, DIRF)',
-  'Contratos e procurações',
-  'Licitações eletrônicas',
-  'Conectividade Social (FGTS)',
-  'Receita Federal e SPED',
-  'Anvisa e órgãos reguladores',
-  'Bancos e instituições financeiras',
-  'Cartórios digitais',
-  'Assinatura de balanços'
-]
-
-const companyTypes = [
-  {
-    type: 'Micro e Pequenas Empresas',
-    description: 'Soluções adaptadas para MEI, ME e EPP com foco na simplicidade e custo-benefício.',
-    features: ['Processo simplificado', 'Suporte dedicado', 'Preços especiais']
-  },
-  {
-    type: 'Médias Empresas',
-    description: 'Certificados para empresas em crescimento com necessidades mais complexas.',
-    features: ['Múltiplos certificados', 'Integração com ERP', 'Gestão centralizada']
-  },
-  {
-    type: 'Grandes Corporações',
-    description: 'Soluções corporativas para grandes volumes e alta complexidade operacional.',
-    features: ['Volume corporativo', 'SLA diferenciado', 'Consultoria especializada']
-  }
-]
+import FullWidthBanner from "@/components/FullWidthBanner"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Shield, Building, Clock, CheckCircle, Users, Phone, FileText, Zap } from "lucide-react"
 
 export default function SaibaMaisPJPage() {
+  const features = [
+    {
+      icon: <Building className="w-6 h-6 flex-shrink-0" />,
+      title: "Para Empresas",
+      description: "Certificados específicos para pessoas jurídicas com máxima segurança",
+    },
+    {
+      icon: <Zap className="w-6 h-6 flex-shrink-0" />,
+      title: "Agilidade nos Processos",
+      description: "Automatize processos fiscais e contábeis da sua empresa",
+    },
+    {
+      icon: <Shield className="w-6 h-6 flex-shrink-0" />,
+      title: "Conformidade Legal",
+      description: "Atenda todas as exigências legais e fiscais com segurança",
+    },
+  ]
+
+  const certificateTypes = [
+    {
+      type: "A1",
+      title: "Certificado A1 Empresarial",
+      description: "Armazenado no computador, válido por 1 ano",
+      price: "A partir de R$ 180,00",
+      features: [
+        "Instalação em múltiplos computadores",
+        "Ideal para pequenas empresas",
+        "Processo simplificado",
+        "Backup automático",
+      ],
+    },
+    {
+      type: "A3",
+      title: "Certificado A3 Empresarial",
+      description: "Armazenado em cartão ou token, máxima segurança",
+      price: "A partir de R$ 190,00",
+      features: [
+        "Máxima segurança empresarial",
+        "Portabilidade total",
+        "Válido por 1, 2 ou 3 anos",
+        "Inclui mídia criptográfica",
+      ],
+    },
+  ]
+
+  const useCases = [
+    "Nota Fiscal Eletrônica (NFe)",
+    "Escrituração Fiscal Digital (EFD)",
+    "eSocial e folha de pagamento",
+    "Declarações fiscais (DCTF, DIRF)",
+    "Procurações eletrônicas",
+    "Contratos digitais",
+    "Licitações eletrônicas",
+    "Conectividade Social (GFIP)",
+    "Sistema Público de Escrituração Digital (SPED)",
+  ]
+
+  const benefits = [
+    {
+      icon: <Clock className="w-8 h-8 text-blue-600" />,
+      title: "Economia de Tempo",
+      description: "Automatize processos burocráticos e ganhe agilidade nas operações",
+    },
+    {
+      icon: <Shield className="w-8 h-8 text-blue-600" />,
+      title: "Segurança Jurídica",
+      description: "Validade jurídica garantida para todos os documentos assinados",
+    },
+    {
+      icon: <FileText className="w-8 h-8 text-blue-600" />,
+      title: "Redução de Custos",
+      description: "Elimine custos com papel, impressão e deslocamentos",
+    },
+    {
+      icon: <Users className="w-8 h-8 text-blue-600" />,
+      title: "Compliance",
+      description: "Atenda todas as exigências legais e fiscais automaticamente",
+    },
+  ]
+
   return (
     <div className="min-h-screen">
       {/* Hero Banner */}
       <FullWidthBanner
         title="Certificado Digital para Empresas"
-        subtitle="Transformação Digital Corporativa"
-        description="Acelere os processos da sua empresa com certificados digitais A1 e A3. Segurança, agilidade e conformidade legal em uma só solução."
-        image="/placeholder.svg?height=500&width=1200"
-        mobileImage="/placeholder.svg?height=400&width=800"
-        ctaText="Solicitar Proposta"
-        ctaLink="/comprar"
-        variant="primary"
+        subtitle="e-CNPJ"
+        description="Transforme os processos da sua empresa com segurança digital. Emita notas fiscais, assine contratos e cumpra obrigações fiscais com agilidade."
+        buttonText="Comprar e-CNPJ"
+        buttonLink="/produtos?tipo=PJ"
+        imageDesktop="/placeholder.svg?height=500&width=600"
+        imageMobile="/placeholder.svg?height=400&width=500"
+        backgroundColor="bg-gradient-to-r from-orange-600 to-orange-800"
+        features={features}
       />
 
-      {/* Certificate Types Section */}
-      <section className="py-12 sm:py-16 md:py-20 bg-gray-50">
+      {/* Benefits Section */}
+      <section className="py-16 sm:py-20">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8 sm:mb-12 md:mb-16">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Certificados para Sua Empresa
-            </h2>
-            <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto">
-              Escolha entre A1 e A3 baseado nas necessidades operacionais da sua empresa
+          <div className="text-center mb-12 sm:mb-16">
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Vantagens para sua Empresa</h2>
+            <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto">
+              Descubra como o certificado digital pode revolucionar os processos da sua empresa
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 max-w-5xl mx-auto">
-            {certificateTypes.map((cert) => (
-              <Card key={cert.type} className={`relative ${cert.recommended ? 'ring-2 ring-orange-500' : ''}`}>
-                {cert.recommended && (
-                  <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 bg-orange-500 text-white px-4 py-1">
-                    Recomendado
-                  </Badge>
-                )}
-                
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
+            {benefits.map((benefit, index) => (
+              <Card
+                key={index}
+                className="text-center p-6 hover:shadow-lg transition-shadow duration-300 border-0 bg-gradient-to-br from-blue-50 to-white"
+              >
+                <CardContent className="pt-0">
+                  <div className="mb-4">{benefit.icon}</div>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-3">{benefit.title}</h3>
+                  <p className="text-gray-600">{benefit.description}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Certificate Types Section */}
+      <section className="py-16 sm:py-20 bg-gray-50">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12 sm:mb-16">
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Tipos de Certificado e-CNPJ</h2>
+            <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto">
+              Escolha a solução ideal para o porte e necessidades da sua empresa
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
+            {certificateTypes.map((cert, index) => (
+              <Card key={index} className="h-full hover:shadow-lg transition-shadow duration-300">
                 <CardHeader className="text-center pb-4">
-                  <CardTitle className="text-xl sm:text-2xl font-bold text-gray-900">
-                    {cert.name}
-                  </CardTitle>
-                  <CardDescription className="text-sm sm:text-base">
-                    Validade: {cert.validity} | Armazenamento: {cert.storage}
-                  </CardDescription>
-                  <div className="text-2xl sm:text-3xl font-bold text-orange-600 mt-2">
-                    {cert.price}
+                  <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <span className="text-2xl font-bold text-orange-600">{cert.type}</span>
                   </div>
+                  <CardTitle className="text-2xl text-gray-900">{cert.title}</CardTitle>
+                  <p className="text-gray-600">{cert.description}</p>
+                  <p className="text-2xl font-bold text-orange-600 mt-2">{cert.price}</p>
                 </CardHeader>
-                
-                <CardContent className="space-y-4">
-                  <ul className="space-y-2 sm:space-y-3">
-                    {cert.features.map((feature, index) => (
-                      <li key={index} className="flex items-start gap-2 sm:gap-3">
-                        <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                        <span className="text-sm sm:text-base text-gray-700">{feature}</span>
+                <CardContent>
+                  <ul className="space-y-3 mb-6">
+                    {cert.features.map((feature, idx) => (
+                      <li key={idx} className="flex items-center space-x-3">
+                        <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
+                        <span className="text-gray-700">{feature}</span>
                       </li>
                     ))}
                   </ul>
-                  
-                  <Button 
-                    className="w-full mt-4 sm:mt-6 bg-blue-600 hover:bg-blue-700 text-white py-2 sm:py-3 text-sm sm:text-base"
-                    asChild
-                  >
-                    <a href="/comprar">Solicitar {cert.type}</a>
+                  <Button className="w-full bg-orange-600 hover:bg-orange-700" size="lg">
+                    Comprar {cert.type}
                   </Button>
                 </CardContent>
               </Card>
@@ -180,68 +166,25 @@ export default function SaibaMaisPJPage() {
         </div>
       </section>
 
-      {/* Benefits Section */}
-      <section className="py-12 sm:py-16 md:py-20">
+      {/* Use Cases Section */}
+      <section className="py-16 sm:py-20">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8 sm:mb-12 md:mb-16">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Vantagens para Sua Empresa
-            </h2>
-            <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto">
-              Transforme a operação da sua empresa com certificação digital
+          <div className="text-center mb-12 sm:mb-16">
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Principais Usos do e-CNPJ</h2>
+            <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto">
+              Seu certificado digital empresarial oferece acesso a todos os sistemas obrigatórios
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-            {benefits.map((benefit, index) => (
-              <div key={index} className="text-center group">
-                <div className="w-16 h-16 sm:w-20 sm:h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6 group-hover:bg-blue-200 transition-colors">
-                  <benefit.icon className="w-8 h-8 sm:w-10 sm:h-10 text-blue-600" />
-                </div>
-                <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2 sm:mb-3">
-                  {benefit.title}
-                </h3>
-                <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
-                  {benefit.description}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Company Types Section */}
-      <section className="py-12 sm:py-16 md:py-20 bg-gray-50">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8 sm:mb-12 md:mb-16">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Soluções por Porte de Empresa
-            </h2>
-            <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto">
-              Oferecemos soluções personalizadas para cada tipo e tamanho de empresa
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
-            {companyTypes.map((company, index) => (
-              <Card key={index} className="h-full">
-                <CardHeader>
-                  <CardTitle className="text-lg sm:text-xl font-bold text-gray-900 mb-2">
-                    {company.type}
-                  </CardTitle>
-                  <CardDescription className="text-sm sm:text-base">
-                    {company.description}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-2">
-                    {company.features.map((feature, featureIndex) => (
-                      <li key={featureIndex} className="flex items-center gap-2">
-                        <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />
-                        <span className="text-sm sm:text-base text-gray-700">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+            {useCases.map((useCase, index) => (
+              <Card
+                key={index}
+                className="text-center p-6 hover:shadow-md transition-shadow duration-300 border-l-4 border-l-orange-500"
+              >
+                <CardContent className="pt-0">
+                  <CheckCircle className="w-12 h-12 text-green-500 mx-auto mb-4" />
+                  <h3 className="text-lg font-semibold text-gray-900">{useCase}</h3>
                 </CardContent>
               </Card>
             ))}
@@ -249,25 +192,45 @@ export default function SaibaMaisPJPage() {
         </div>
       </section>
 
-      {/* Use Cases Section */}
-      <section className="py-12 sm:py-16 md:py-20">
+      {/* Process Section */}
+      <section className="py-16 sm:py-20 bg-gray-50">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8 sm:mb-12 md:mb-16">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Aplicações Empresariais
-            </h2>
-            <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto">
-              Veja onde sua empresa pode usar o certificado digital
+          <div className="text-center mb-12 sm:mb-16">
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Como obter seu e-CNPJ</h2>
+            <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto">
+              Processo especializado para empresas com suporte completo
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
-            {useCases.map((useCase, index) => (
-              <div key={index} className="bg-white p-4 sm:p-6 rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
-                <div className="flex items-center gap-3">
-                  <Building className="w-5 h-5 text-blue-600 flex-shrink-0" />
-                  <span className="text-sm sm:text-base text-gray-700 font-medium">{useCase}</span>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 max-w-6xl mx-auto">
+            {[
+              {
+                step: "1",
+                title: "Escolha seu certificado",
+                description: "Selecione A1 ou A3 conforme suas necessidades empresariais",
+              },
+              {
+                step: "2",
+                title: "Documentação empresarial",
+                description: "Prepare CNPJ, contrato social e documentos do responsável",
+              },
+              {
+                step: "3",
+                title: "Validação presencial",
+                description: "Compareça à nossa AR com o responsável legal da empresa",
+              },
+              {
+                step: "4",
+                title: "Certificado ativo",
+                description: "Receba e instale seu certificado em até 24h úteis",
+              },
+            ].map((item, index) => (
+              <div key={index} className="text-center">
+                <div className="w-16 h-16 bg-orange-600 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">
+                  {item.step}
                 </div>
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">{item.title}</h3>
+                <p className="text-gray-600">{item.description}</p>
               </div>
             ))}
           </div>
@@ -275,30 +238,27 @@ export default function SaibaMaisPJPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-12 sm:py-16 md:py-20 bg-blue-600">
+      <section className="py-16 sm:py-20 bg-orange-600">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4 sm:mb-6">
-            Transforme Sua Empresa Hoje
-          </h2>
-          <p className="text-base sm:text-lg text-blue-100 mb-6 sm:mb-8 max-w-2xl mx-auto">
-            Solicite uma proposta personalizada e descubra como o certificado digital pode revolucionar seus processos
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto">
-            <Button 
-              size="lg" 
-              className="bg-orange-500 hover:bg-orange-600 text-white px-6 sm:px-8 py-3 sm:py-4 text-sm sm:text-base font-semibold w-full sm:w-auto"
-              asChild
-            >
-              <a href="/comprar">Solicitar Proposta</a>
-            </Button>
-            <Button 
-              size="lg" 
-              variant="outline" 
-              className="border-white text-white hover:bg-white hover:text-blue-600 px-6 sm:px-8 py-3 sm:py-4 text-sm sm:text-base font-semibold w-full sm:w-auto"
-              asChild
-            >
-              <a href="/contato">Consultoria Gratuita</a>
-            </Button>
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-6">Transforme os Processos da sua Empresa</h2>
+            <p className="text-xl text-orange-100 mb-8">
+              Ganhe agilidade, segurança e conformidade legal com nossos certificados digitais
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button size="lg" className="bg-white text-orange-600 hover:bg-gray-100 px-8 py-4 text-lg font-semibold">
+                <Building className="mr-2 w-5 h-5" />
+                Comprar e-CNPJ
+              </Button>
+              <Button
+                size="lg"
+                variant="outline"
+                className="border-white text-white hover:bg-white hover:text-orange-600 px-8 py-4 text-lg font-semibold bg-transparent"
+              >
+                <Phone className="mr-2 w-5 h-5" />
+                Consultoria Empresarial
+              </Button>
+            </div>
           </div>
         </div>
       </section>
