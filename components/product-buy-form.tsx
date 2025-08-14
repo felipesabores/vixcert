@@ -1,73 +1,82 @@
 "use client"
 
-import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { useToast } from "@/components/ui/use-toast"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { ShieldCheck, Award, Clock, CreditCard } from "lucide-react"
 import { createCheckoutSession } from "@/lib/actions"
+import { useState } from "react"
+import type { Product } from "@/lib/schema"
 
 interface ProductBuyFormProps {
-  priceId: string
-  productName: string
-  price: number
+  product: Product
 }
 
-export function ProductBuyForm({ priceId, productName, price }: ProductBuyFormProps) {
+export function ProductBuyForm({ product }: ProductBuyFormProps) {
   const [isLoading, setIsLoading] = useState(false)
-  const { toast } = useToast()
 
   const handleBuy = async () => {
-    if (!priceId) {
-      toast({
-        title: "Erro",
-        description: "Preço do produto não encontrado. Por favor, tente novamente.",
-        variant: "destructive",
-      })
+    if (!product.price.id) {
+      alert("Produto sem preço configurado. Entre em contato conosco.")
       return
     }
 
     setIsLoading(true)
     try {
-      console.log("Creating checkout session with priceId:", priceId)
-      const result = await createCheckoutSession(priceId)
-
-      if (result.url) {
-        window.location.href = result.url
-      } else if (result.error) {
-        throw new Error(result.error)
-      } else {
-        throw new Error("Failed to create checkout session: No URL or error returned")
-      }
+      await createCheckoutSession(product.id, product.price.id)
     } catch (error) {
-      console.error("Error creating checkout session:", error)
-      toast({
-        title: "Erro",
-        description:
-          error instanceof Error
-            ? error.message
-            : "Ocorreu um erro ao processar sua compra. Por favor, tente novamente.",
-        variant: "destructive",
-      })
+      console.error("Error during checkout:", error)
+      alert("Erro ao processar compra. Tente novamente.")
     } finally {
       setIsLoading(false)
     }
   }
 
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat("pt-BR", {
-      style: "currency",
-      currency: "BRL",
-    }).format(price / 100)
-  }
-
   return (
-    <div className="space-y-4">
-      <div className="text-center">
-        <h3 className="text-lg font-semibold">{productName}</h3>
-        <p className="text-2xl font-bold text-primary">{formatPrice(price)}</p>
-      </div>
-      <Button onClick={handleBuy} disabled={isLoading || !priceId} className="w-full" size="lg">
-        {isLoading ? "Processando..." : "Comprar Agora"}
-      </Button>
-    </div>
+    <Card className="w-full max-w-md">
+      <CardHeader>
+        <div className="flex justify-between items-start mb-2">
+          <Badge variant="outline">
+            {product.metadata?.tipo || product.metadata?.categoria || "Certificado Digital"}
+          </Badge>
+          {product.metadata?.validade && <Badge variant="secondary">{product.metadata.validade}</Badge>}
+        </div>
+        <CardTitle className="text-xl">{product.name}</CardTitle>
+        <CardDescription className="text-sm">{product.description}</CardDescription>
+      </CardHeader>
+
+      <CardContent className="space-y-4">
+        <div className="space-y-2">
+          {product.metadata?.midia && (
+            <div className="flex items-center gap-2">
+              <ShieldCheck className="h-4 w-4 text-primary" />
+              <span className="text-sm">Mídia: {product.metadata.midia}</span>
+            </div>
+          )}
+          <div className="flex items-center gap-2">
+            <Award className="h-4 w-4 text-primary" />
+            <span className="text-sm">Homologado ICP-Brasil</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Clock className="h-4 w-4 text-primary" />
+            <span className="text-sm">Emissão rápida</span>
+          </div>
+        </div>
+
+        <div className="border-t pt-4">
+          <div className="flex justify-between items-center">
+            <span className="text-sm text-gray-500">Preço:</span>
+            <span className="text-2xl font-bold text-primary">{product.price.display_amount || "Consulte"}</span>
+          </div>
+        </div>
+      </CardContent>
+
+      <CardFooter>
+        <Button onClick={handleBuy} disabled={isLoading || !product.price.id} className="w-full" size="lg">
+          <CreditCard className="mr-2 h-4 w-4" />
+          {isLoading ? "Processando..." : "Comprar Agora"}
+        </Button>
+      </CardFooter>
+    </Card>
   )
 }

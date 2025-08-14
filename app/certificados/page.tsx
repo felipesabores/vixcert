@@ -7,7 +7,7 @@ export const metadata = {
 }
 
 export default async function CertificadosPage() {
-  const products = await getProducts({ limit: 100 })
+  const productsResult = await getProducts({ limit: 100 })
 
   return (
     <div className="container mx-auto py-12">
@@ -46,7 +46,7 @@ export default async function CertificadosPage() {
         </div>
       </div>
 
-      <ProductGrid products={products.data} />
+      <ProductGrid products={productsResult.data} />
     </div>
   )
 }

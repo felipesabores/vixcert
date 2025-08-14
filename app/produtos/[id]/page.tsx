@@ -1,9 +1,8 @@
-import { notFound } from "next/navigation"
-import { getProduct } from "@/lib/products"
+import { getProductById } from "@/lib/products"
 import { ProductBuyForm } from "@/components/product-buy-form"
+import { notFound } from "next/navigation"
 import { Badge } from "@/components/ui/badge"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Shield, Clock, CreditCard, FileText } from "lucide-react"
+import { ShieldCheck, Award, Clock, FileText, Users, Building } from "lucide-react"
 
 interface ProductPageProps {
   params: {
@@ -12,162 +11,125 @@ interface ProductPageProps {
 }
 
 export default async function ProductPage({ params }: ProductPageProps) {
-  const product = await getProduct(params.id)
+  const product = await getProductById(params.id)
 
   if (!product) {
     notFound()
   }
 
-  const priceId = product.default_price?.id
-  const price = product.default_price?.unit_amount || 0
-
-  const getTipoLabel = (tipo: string) => {
-    return tipo === "PF" ? "Pessoa Física" : "Pessoa Jurídica"
-  }
-
-  const getMidiaIcon = (midia: string) => {
-    switch (midia) {
-      case "Cartão":
-      case "Cartão + Leitora":
-        return <CreditCard className="h-4 w-4" />
-      case "Token":
-        return <Shield className="h-4 w-4" />
-      default:
-        return <FileText className="h-4 w-4" />
-    }
-  }
+  const isPersonaFisica =
+    product.metadata?.tipo?.toLowerCase().includes("e-cpf") || product.metadata?.categoria?.toLowerCase().includes("pf")
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="max-w-4xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Informações do Produto */}
-          <div className="space-y-6">
-            <div>
-              <Badge variant="secondary" className="mb-2">
-                {getTipoLabel(product.metadata.tipo || "")}
+    <div className="container mx-auto py-12">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        {/* Product Details */}
+        <div className="space-y-6">
+          <div className="space-y-4">
+            <div className="flex gap-2">
+              <Badge variant="outline">
+                {product.metadata?.tipo || product.metadata?.categoria || "Certificado Digital"}
               </Badge>
-              <h1 className="text-3xl font-bold mb-4">{product.name}</h1>
-              <p className="text-muted-foreground text-lg">{product.description}</p>
+              {product.metadata?.validade && <Badge variant="secondary">{product.metadata.validade}</Badge>}
             </div>
 
-            {/* Especificações */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Shield className="h-5 w-5" />
-                  Especificações
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <p className="text-sm font-medium text-muted-foreground">Tipo</p>
-                    <p className="font-semibold">{product.metadata.tipo === "PF" ? "e-CPF" : "e-CNPJ"}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-muted-foreground">Modelo</p>
-                    <p className="font-semibold">{product.metadata.modelo}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-muted-foreground">Validade</p>
-                    <p className="font-semibold flex items-center gap-1">
-                      <Clock className="h-4 w-4" />
-                      {product.metadata.validade}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-muted-foreground">Mídia</p>
-                    <p className="font-semibold flex items-center gap-1">
-                      {getMidiaIcon(product.metadata.midia || "")}
-                      {product.metadata.midia === "-" ? "Arquivo Digital" : product.metadata.midia}
-                    </p>
-                  </div>
+            <h1 className="text-4xl font-bold">{product.name}</h1>
+
+            <p className="text-xl text-gray-600">{product.description}</p>
+          </div>
+
+          {/* Features */}
+          <div className="space-y-4">
+            <h2 className="text-2xl font-semibold">Características</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg">
+                <ShieldCheck className="h-6 w-6 text-primary" />
+                <div>
+                  <h3 className="font-semibold">Segurança</h3>
+                  <p className="text-sm text-gray-600">Criptografia de alta segurança</p>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
 
-            {/* Características */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Características do Certificado</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ul className="space-y-2">
-                  <li className="flex items-start gap-2">
-                    <Shield className="h-4 w-4 mt-1 text-primary" />
-                    <span className="text-sm">Certificado digital ICP-Brasil</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <Shield className="h-4 w-4 mt-1 text-primary" />
-                    <span className="text-sm">Emitido por Autoridade Certificadora credenciada</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <Shield className="h-4 w-4 mt-1 text-primary" />
-                    <span className="text-sm">Validade jurídica garantida</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <Shield className="h-4 w-4 mt-1 text-primary" />
-                    <span className="text-sm">Suporte técnico especializado</span>
-                  </li>
-                </ul>
-              </CardContent>
-            </Card>
-          </div>
+              <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg">
+                <Award className="h-6 w-6 text-primary" />
+                <div>
+                  <h3 className="font-semibold">Certificação</h3>
+                  <p className="text-sm text-gray-600">Homologado ICP-Brasil</p>
+                </div>
+              </div>
 
-          {/* Formulário de Compra */}
-          <div className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Adquirir Certificado</CardTitle>
-                <CardDescription>Processo seguro e rápido de aquisição</CardDescription>
-              </CardHeader>
-              <CardContent>
-                {priceId ? (
-                  <ProductBuyForm priceId={priceId} productName={product.name} price={price} />
+              <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg">
+                <Clock className="h-6 w-6 text-primary" />
+                <div>
+                  <h3 className="font-semibold">Rapidez</h3>
+                  <p className="text-sm text-gray-600">Emissão em até 24h</p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg">
+                {isPersonaFisica ? (
+                  <Users className="h-6 w-6 text-green-500" />
                 ) : (
-                  <div className="text-center py-8">
-                    <p className="text-muted-foreground">Preço não disponível no momento. Entre em contato conosco.</p>
-                  </div>
+                  <Building className="h-6 w-6 text-secondary" />
                 )}
-              </CardContent>
-            </Card>
-
-            {/* Informações Adicionais */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Processo de Emissão</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ol className="space-y-3 text-sm">
-                  <li className="flex gap-3">
-                    <span className="flex-shrink-0 w-6 h-6 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-xs font-bold">
-                      1
-                    </span>
-                    <span>Realize a compra online</span>
-                  </li>
-                  <li className="flex gap-3">
-                    <span className="flex-shrink-0 w-6 h-6 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-xs font-bold">
-                      2
-                    </span>
-                    <span>Agende a validação presencial</span>
-                  </li>
-                  <li className="flex gap-3">
-                    <span className="flex-shrink-0 w-6 h-6 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-xs font-bold">
-                      3
-                    </span>
-                    <span>Compareça com os documentos</span>
-                  </li>
-                  <li className="flex gap-3">
-                    <span className="flex-shrink-0 w-6 h-6 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-xs font-bold">
-                      4
-                    </span>
-                    <span>Receba seu certificado</span>
-                  </li>
-                </ol>
-              </CardContent>
-            </Card>
+                <div>
+                  <h3 className="font-semibold">Tipo</h3>
+                  <p className="text-sm text-gray-600">{isPersonaFisica ? "Pessoa Física" : "Pessoa Jurídica"}</p>
+                </div>
+              </div>
+            </div>
           </div>
+
+          {/* Usage */}
+          <div className="space-y-4">
+            <h2 className="text-2xl font-semibold">Para que serve?</h2>
+            <div className="space-y-2">
+              {isPersonaFisica ? (
+                <>
+                  <div className="flex items-center gap-2">
+                    <FileText className="h-4 w-4 text-primary" />
+                    <span>Declaração de Imposto de Renda</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <FileText className="h-4 w-4 text-primary" />
+                    <span>Assinatura de documentos digitais</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <FileText className="h-4 w-4 text-primary" />
+                    <span>Acesso a serviços governamentais</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <FileText className="h-4 w-4 text-primary" />
+                    <span>Procurações eletrônicas</span>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="flex items-center gap-2">
+                    <FileText className="h-4 w-4 text-primary" />
+                    <span>Emissão de Notas Fiscais Eletrônicas</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <FileText className="h-4 w-4 text-primary" />
+                    <span>Acesso ao SPED e eSocial</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <FileText className="h-4 w-4 text-primary" />
+                    <span>Assinatura de contratos digitais</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <FileText className="h-4 w-4 text-primary" />
+                    <span>Transações bancárias corporativas</span>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Purchase Form */}
+        <div className="flex justify-center lg:justify-start">
+          <ProductBuyForm product={product} />
         </div>
       </div>
     </div>

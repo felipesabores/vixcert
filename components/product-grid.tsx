@@ -8,14 +8,37 @@ import Link from "next/link"
 
 type Product = z.infer<typeof productSchema>
 
-export function ProductGrid({ products }: { products: Product[] }) {
+interface ProductGridProps {
+  products: Product[]
+}
+
+export function ProductGrid({ products }: ProductGridProps) {
+  // Ensure products is an array before filtering
+  if (!Array.isArray(products)) {
+    console.error("ProductGrid: products is not an array", products)
+    return (
+      <div className="text-center py-8">
+        <p className="text-gray-500">Erro ao carregar produtos. Tente novamente mais tarde.</p>
+      </div>
+    )
+  }
+
   // Filter to show only certificate products
   const certificateProducts = products.filter(
     (product) =>
       product.metadata?.tipo?.toLowerCase().includes("certificado") ||
       product.metadata?.tipo?.toLowerCase().includes("e-cpf") ||
-      product.metadata?.tipo?.toLowerCase().includes("e-cnpj"),
+      product.metadata?.tipo?.toLowerCase().includes("e-cnpj") ||
+      product.metadata?.categoria?.toLowerCase().includes("certificado"),
   )
+
+  if (certificateProducts.length === 0) {
+    return (
+      <div className="text-center py-8">
+        <p className="text-gray-500">Nenhum certificado encontrado.</p>
+      </div>
+    )
+  }
 
   return (
     <section className="my-12">
@@ -23,12 +46,17 @@ export function ProductGrid({ products }: { products: Product[] }) {
         {certificateProducts.map((product) => (
           <Card key={product.id} className="flex flex-col border-0 shadow-lg rounded-xl overflow-hidden">
             <div
-              className={`h-2 w-full ${product.metadata?.tipo?.toLowerCase().includes("e-cpf") ? "bg-green-500" : "bg-secondary"}`}
+              className={`h-2 w-full ${
+                product.metadata?.tipo?.toLowerCase().includes("e-cpf") ||
+                product.metadata?.categoria?.toLowerCase().includes("pf")
+                  ? "bg-green-500"
+                  : "bg-secondary"
+              }`}
             ></div>
             <CardContent className="flex-1 p-6">
               <div className="flex justify-between items-start mb-4">
                 <Badge variant="outline" className="text-sm">
-                  {product.metadata?.tipo || "Certificado Digital"}
+                  {product.metadata?.tipo || product.metadata?.categoria || "Certificado Digital"}
                 </Badge>
                 {product.metadata?.validade && (
                   <Badge variant="outline" className="text-sm">
@@ -63,11 +91,16 @@ export function ProductGrid({ products }: { products: Product[] }) {
             <CardFooter className="flex justify-between items-center pt-4 p-6 border-t bg-gray-50">
               <div className="flex flex-col">
                 <span className="text-sm text-gray-500">A partir de</span>
-                <span className="text-2xl font-bold text-primary">{product.price.display_amount}</span>
+                <span className="text-2xl font-bold text-primary">{product.price.display_amount || "Consulte"}</span>
               </div>
               <Button
                 asChild
-                className={`${product.metadata?.tipo?.toLowerCase().includes("e-cpf") ? "bg-green-500 hover:bg-green-600" : "bg-secondary hover:bg-secondary/90"} text-white`}
+                className={`${
+                  product.metadata?.tipo?.toLowerCase().includes("e-cpf") ||
+                  product.metadata?.categoria?.toLowerCase().includes("pf")
+                    ? "bg-green-500 hover:bg-green-600"
+                    : "bg-secondary hover:bg-secondary/90"
+                } text-white`}
               >
                 <Link href={`/produtos/${product.id}`}>Ver detalhes</Link>
               </Button>
