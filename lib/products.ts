@@ -1,83 +1,71 @@
-import { stripe } from "@/lib/stripe"
-import { productSchema } from "@/lib/schema"
-import type Stripe from "stripe"
+import { stripe } from "./stripe"
 
-export async function getProducts(options: Pick<Stripe.ProductListParams, "limit"> = { limit: 10 }) {
-  const products = await stripe.products.list({
-    ...options,
-    expand: ["data.default_price"],
-  })
+export interface Product {
+  id: string
+  name: string
+  description: string | null
+  images: string[]
+  metadata: {
+    tipo?: string
+    modelo?: string
+    validade?: string
+    midia?: string
+    preco_original?: string
+  }
+  default_price: {
+    id: string
+    unit_amount: number
+    currency: string
+  } | null
+}
 
-  return {
-    data: products.data.map((product) => {
-      const price = product.default_price as Stripe.Price
-      let amount: number | null = null
-      let displayAmount: string | null = null
+export async function getProducts(): Promise<Product[]> {
+  try {
+    const products = await stripe.products.list({
+      active: true,
+      expand: ["data.default_price"],
+      limit: 100,
+    })
 
-      if (price && typeof price.unit_amount === "number") {
-        amount = price.unit_amount / 100
-        displayAmount = amount.toLocaleString("pt-BR", {
-          style: "currency",
-          currency: "BRL",
-        })
-      }
-
-      return productSchema.parse({
-        id: product.id,
-        name: product.name,
-        description: product.description,
-        images: product.images,
-        price: {
-          id: price?.id || null,
-          amount,
-          display_amount: displayAmount,
-        },
-        metadata: product.metadata,
-      })
-    }),
-    has_more: products.has_more,
+    return products.data.map((product) => ({
+      id: product.id,
+      name: product.name,
+      description: product.description,
+      images: product.images,
+      metadata: product.metadata,
+      default_price: product.default_price as any,
+    }))
+  } catch (error) {
+    console.error("Error fetching products:", error)
+    return []
   }
 }
 
-export async function getProductById(productId: string) {
+export async function getProduct(productId: string): Promise<Product | null> {
   try {
     const product = await stripe.products.retrieve(productId, {
       expand: ["default_price"],
     })
 
-    if (!product) {
+    if (!product.active) {
       return null
     }
 
-    const price = product.default_price as Stripe.Price
-    let amount: number | null = null
-    let displayAmount: string | null = null
-
-    if (price && typeof price.unit_amount === "number") {
-      amount = price.unit_amount / 100
-      displayAmount = amount.toLocaleString("pt-BR", {
-        style: "currency",
-        currency: "BRL",
-      })
-    }
-
-    const parsedProduct = productSchema.parse({
+    return {
       id: product.id,
       name: product.name,
       description: product.description,
       images: product.images,
-      price: {
-        id: price?.id || null,
-        amount,
-        display_amount: displayAmount,
-      },
       metadata: product.metadata,
-    })
-
-    return parsedProduct
+      default_price: product.default_price as any,
+    }
   } catch (error) {
-    console.error("Error fetching product:")
-    console.error(error)
-    throw error
+    console.error("Error fetching product:", error)
+    return null
   }
+}
+
+export async function getProductsByType(tipo: "PF" | "PJ"): Promise<Product[]> {
+  const products = await getProducts()
+  return products.filter((product) => product.metadata.tipo === tipo)
 }

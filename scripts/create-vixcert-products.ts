@@ -1,321 +1,225 @@
-import { stripe } from "@/lib/stripe"
+import { stripe } from "../lib/stripe"
+
+const products = [
+  {
+    Tipo: "PF",
+    Modelo: "A1",
+    Validade: "1 ano",
+    Midia: "-",
+    Preco_R$: "120",
+  },
+  {
+    Tipo: "PF",
+    Modelo: "A3",
+    Validade: "1 ano",
+    Midia: "Sem Midia",
+    Preco_R$: "130",
+  },
+  {
+    Tipo: "PF",
+    Modelo: "A3",
+    Validade: "1 ano",
+    Midia: "Cartão",
+    Preco_R$: "160",
+  },
+  {
+    Tipo: "PF",
+    Modelo: "A3",
+    Validade: "1 ano",
+    Midia: "Token",
+    Preco_R$: "300",
+  },
+  {
+    Tipo: "PF",
+    Modelo: "A3",
+    Validade: "2 anos",
+    Midia: "Sem Midia",
+    Preco_R$: "190",
+  },
+  {
+    Tipo: "PF",
+    Modelo: "A3",
+    Validade: "2 anos",
+    Midia: "Cartão",
+    Preco_R$: "220",
+  },
+  {
+    Tipo: "PF",
+    Modelo: "A3",
+    Validade: "2 anos",
+    Midia: "Token",
+    Preco_R$: "340",
+  },
+  {
+    Tipo: "PF",
+    Modelo: "A3",
+    Validade: "3 anos",
+    Midia: "Sem Midia",
+    Preco_R$: "235",
+  },
+  {
+    Tipo: "PF",
+    Modelo: "A3",
+    Validade: "3 anos",
+    Midia: "Cartão",
+    Preco_R$: "250",
+  },
+  {
+    Tipo: "PF",
+    Modelo: "A3",
+    Validade: "3 anos",
+    Midia: "Cartão + Leitora",
+    Preco_R$: "365",
+  },
+  {
+    Tipo: "PF",
+    Modelo: "A3",
+    Validade: "3 anos",
+    Midia: "Token",
+    Preco_R$: "365",
+  },
+  {
+    Tipo: "PJ",
+    Modelo: "A1",
+    Validade: "1 ano",
+    Midia: "-",
+    Preco_R$: "180",
+  },
+  {
+    Tipo: "PJ",
+    Modelo: "A3",
+    Validade: "1 ano",
+    Midia: "Sem Midia",
+    Preco_R$: "190",
+  },
+  {
+    Tipo: "PJ",
+    Modelo: "A3",
+    Validade: "1 ano",
+    Midia: "Cartão",
+    Preco_R$: "220",
+  },
+  {
+    Tipo: "PJ",
+    Modelo: "A3",
+    Validade: "1 ano",
+    Midia: "Token",
+    Preco_R$: "340",
+  },
+  {
+    Tipo: "PJ",
+    Modelo: "A3",
+    Validade: "2 anos",
+    Midia: "Sem Midia",
+    Preco_R$: "280",
+  },
+  {
+    Tipo: "PJ",
+    Modelo: "A3",
+    Validade: "2 anos",
+    Midia: "Cartão",
+    Preco_R$: "315",
+  },
+  {
+    Tipo: "PJ",
+    Modelo: "A3",
+    Validade: "2 anos",
+    Midia: "Token",
+    Preco_R$: "400",
+  },
+  {
+    Tipo: "PJ",
+    Modelo: "A3",
+    Validade: "3 anos",
+    Midia: "Sem Midia",
+    Preco_R$: "310",
+  },
+  {
+    Tipo: "PJ",
+    Modelo: "A3",
+    Validade: "3 anos",
+    Midia: "Cartão",
+    Preco_R$: "340",
+  },
+  {
+    Tipo: "PJ",
+    Modelo: "A3",
+    Validade: "3 anos",
+    Midia: "Cartão + Leitora",
+    Preco_R$: "440",
+  },
+  {
+    Tipo: "PJ",
+    Modelo: "A3",
+    Validade: "3 anos",
+    Midia: "Token",
+    Preco_R$: "440",
+  },
+]
+
+function generateProductName(product: any): string {
+  const tipo = product.Tipo === "PF" ? "e-CPF" : "e-CNPJ"
+  const modelo = product.Modelo
+  const validade = product.Validade
+  const midia = product.Midia === "-" ? "" : ` - ${product.Midia}`
+
+  return `${tipo} ${modelo} (${validade})${midia}`
+}
+
+function generateProductDescription(product: any): string {
+  const tipo = product.Tipo === "PF" ? "Pessoa Física" : "Pessoa Jurídica"
+  const certificado = product.Tipo === "PF" ? "e-CPF" : "e-CNPJ"
+  const modelo = product.Modelo
+  const validade = product.Validade
+  const midia = product.Midia === "-" ? "Arquivo Digital" : product.Midia
+
+  return `Certificado Digital ${certificado} ${modelo} para ${tipo}. Validade de ${validade}. Mídia: ${midia}. Certificado emitido pela VixCert, Autoridade de Registro credenciada pela ICP-Brasil.`
+}
 
 async function createVixCertProducts() {
-  const products = [
-    // Certificados PF (Pessoa Física)
-    {
-      name: "Certificado Digital e-CPF A1 - 1 ano",
-      description:
-        "Certificado digital para pessoa física A1 com validade de 1 ano. Armazenado em arquivo digital, oferece praticidade e segurança para suas transações digitais.",
-      price: 12000, // R$ 120,00
-      metadata: {
-        tipo: "PF",
-        modelo: "A1",
-        validade: "1 ano",
-        midia: "Arquivo Digital",
-        categoria: "e-CPF",
-      },
-    },
-    {
-      name: "Certificado Digital e-CPF A3 - 1 ano (Sem Mídia)",
-      description:
-        "Certificado digital para pessoa física A3 com validade de 1 ano. Sem mídia física incluída, ideal para quem já possui token ou cartão.",
-      price: 13000, // R$ 130,00
-      metadata: {
-        tipo: "PF",
-        modelo: "A3",
-        validade: "1 ano",
-        midia: "Sem Midia",
-        categoria: "e-CPF",
-      },
-    },
-    {
-      name: "Certificado Digital e-CPF A3 - 1 ano (Cartão)",
-      description:
-        "Certificado digital para pessoa física A3 com validade de 1 ano. Inclui cartão criptográfico para máxima segurança.",
-      price: 16000, // R$ 160,00
-      metadata: {
-        tipo: "PF",
-        modelo: "A3",
-        validade: "1 ano",
-        midia: "Cartão",
-        categoria: "e-CPF",
-      },
-    },
-    {
-      name: "Certificado Digital e-CPF A3 - 1 ano (Token)",
-      description:
-        "Certificado digital para pessoa física A3 com validade de 1 ano. Inclui token USB para portabilidade e segurança máxima.",
-      price: 30000, // R$ 300,00
-      metadata: {
-        tipo: "PF",
-        modelo: "A3",
-        validade: "1 ano",
-        midia: "Token",
-        categoria: "e-CPF",
-      },
-    },
-    {
-      name: "Certificado Digital e-CPF A3 - 2 anos (Sem Mídia)",
-      description:
-        "Certificado digital para pessoa física A3 com validade de 2 anos. Sem mídia física incluída, economia a longo prazo.",
-      price: 19000, // R$ 190,00
-      metadata: {
-        tipo: "PF",
-        modelo: "A3",
-        validade: "2 anos",
-        midia: "Sem Midia",
-        categoria: "e-CPF",
-      },
-    },
-    {
-      name: "Certificado Digital e-CPF A3 - 2 anos (Cartão)",
-      description:
-        "Certificado digital para pessoa física A3 com validade de 2 anos. Inclui cartão criptográfico, melhor custo-benefício.",
-      price: 22000, // R$ 220,00
-      metadata: {
-        tipo: "PF",
-        modelo: "A3",
-        validade: "2 anos",
-        midia: "Cartão",
-        categoria: "e-CPF",
-      },
-    },
-    {
-      name: "Certificado Digital e-CPF A3 - 2 anos (Token)",
-      description:
-        "Certificado digital para pessoa física A3 com validade de 2 anos. Token USB incluído para máxima praticidade.",
-      price: 34000, // R$ 340,00
-      metadata: {
-        tipo: "PF",
-        modelo: "A3",
-        validade: "2 anos",
-        midia: "Token",
-        categoria: "e-CPF",
-      },
-    },
-    {
-      name: "Certificado Digital e-CPF A3 - 3 anos (Sem Mídia)",
-      description:
-        "Certificado digital para pessoa física A3 com validade de 3 anos. Sem mídia física, máxima economia a longo prazo.",
-      price: 23500, // R$ 235,00
-      metadata: {
-        tipo: "PF",
-        modelo: "A3",
-        validade: "3 anos",
-        midia: "Sem Midia",
-        categoria: "e-CPF",
-      },
-    },
-    {
-      name: "Certificado Digital e-CPF A3 - 3 anos (Cartão)",
-      description:
-        "Certificado digital para pessoa física A3 com validade de 3 anos. Inclui cartão criptográfico, excelente investimento.",
-      price: 25000, // R$ 250,00
-      metadata: {
-        tipo: "PF",
-        modelo: "A3",
-        validade: "3 anos",
-        midia: "Cartão",
-        categoria: "e-CPF",
-      },
-    },
-    {
-      name: "Certificado Digital e-CPF A3 - 3 anos (Cartão + Leitora)",
-      description:
-        "Certificado digital para pessoa física A3 com validade de 3 anos. Cartão + leitora incluída, kit completo para uso imediato.",
-      price: 36500, // R$ 365,00
-      metadata: {
-        tipo: "PF",
-        modelo: "A3",
-        validade: "3 anos",
-        midia: "Cartão + Leitora",
-        categoria: "e-CPF",
-      },
-    },
-    {
-      name: "Certificado Digital e-CPF A3 - 3 anos (Token)",
-      description:
-        "Certificado digital para pessoa física A3 com validade de 3 anos. Token USB premium, máxima durabilidade e segurança.",
-      price: 36500, // R$ 365,00
-      metadata: {
-        tipo: "PF",
-        modelo: "A3",
-        validade: "3 anos",
-        midia: "Token",
-        categoria: "e-CPF",
-      },
-    },
-
-    // Certificados PJ (Pessoa Jurídica)
-    {
-      name: "Certificado Digital e-CNPJ A1 - 1 ano",
-      description:
-        "Certificado digital para pessoa jurídica A1 com validade de 1 ano. Arquivo digital prático para empresas de pequeno porte.",
-      price: 18000, // R$ 180,00
-      metadata: {
-        tipo: "PJ",
-        modelo: "A1",
-        validade: "1 ano",
-        midia: "Arquivo Digital",
-        categoria: "e-CNPJ",
-      },
-    },
-    {
-      name: "Certificado Digital e-CNPJ A3 - 1 ano (Sem Mídia)",
-      description:
-        "Certificado digital para pessoa jurídica A3 com validade de 1 ano. Sem mídia física incluída, para empresas que já possuem hardware.",
-      price: 19000, // R$ 190,00
-      metadata: {
-        tipo: "PJ",
-        modelo: "A3",
-        validade: "1 ano",
-        midia: "Sem Midia",
-        categoria: "e-CNPJ",
-      },
-    },
-    {
-      name: "Certificado Digital e-CNPJ A3 - 1 ano (Cartão)",
-      description:
-        "Certificado digital para pessoa jurídica A3 com validade de 1 ano. Cartão criptográfico para segurança empresarial.",
-      price: 22000, // R$ 220,00
-      metadata: {
-        tipo: "PJ",
-        modelo: "A3",
-        validade: "1 ano",
-        midia: "Cartão",
-        categoria: "e-CNPJ",
-      },
-    },
-    {
-      name: "Certificado Digital e-CNPJ A3 - 1 ano (Token)",
-      description:
-        "Certificado digital para pessoa jurídica A3 com validade de 1 ano. Token USB empresarial de alta segurança.",
-      price: 34000, // R$ 340,00
-      metadata: {
-        tipo: "PJ",
-        modelo: "A3",
-        validade: "1 ano",
-        midia: "Token",
-        categoria: "e-CNPJ",
-      },
-    },
-    {
-      name: "Certificado Digital e-CNPJ A3 - 2 anos (Sem Mídia)",
-      description:
-        "Certificado digital para pessoa jurídica A3 com validade de 2 anos. Sem mídia física, economia para empresas.",
-      price: 28000, // R$ 280,00
-      metadata: {
-        tipo: "PJ",
-        modelo: "A3",
-        validade: "2 anos",
-        midia: "Sem Midia",
-        categoria: "e-CNPJ",
-      },
-    },
-    {
-      name: "Certificado Digital e-CNPJ A3 - 2 anos (Cartão)",
-      description:
-        "Certificado digital para pessoa jurídica A3 com validade de 2 anos. Cartão criptográfico, custo-benefício empresarial.",
-      price: 31500, // R$ 315,00
-      metadata: {
-        tipo: "PJ",
-        modelo: "A3",
-        validade: "2 anos",
-        midia: "Cartão",
-        categoria: "e-CNPJ",
-      },
-    },
-    {
-      name: "Certificado Digital e-CNPJ A3 - 2 anos (Token)",
-      description:
-        "Certificado digital para pessoa jurídica A3 com validade de 2 anos. Token USB empresarial, praticidade e segurança.",
-      price: 40000, // R$ 400,00
-      metadata: {
-        tipo: "PJ",
-        modelo: "A3",
-        validade: "2 anos",
-        midia: "Token",
-        categoria: "e-CNPJ",
-      },
-    },
-    {
-      name: "Certificado Digital e-CNPJ A3 - 3 anos (Sem Mídia)",
-      description:
-        "Certificado digital para pessoa jurídica A3 com validade de 3 anos. Sem mídia física, máxima economia empresarial.",
-      price: 31000, // R$ 310,00
-      metadata: {
-        tipo: "PJ",
-        modelo: "A3",
-        validade: "3 anos",
-        midia: "Sem Midia",
-        categoria: "e-CNPJ",
-      },
-    },
-    {
-      name: "Certificado Digital e-CNPJ A3 - 3 anos (Cartão)",
-      description:
-        "Certificado digital para pessoa jurídica A3 com validade de 3 anos. Cartão criptográfico, investimento de longo prazo.",
-      price: 34000, // R$ 340,00
-      metadata: {
-        tipo: "PJ",
-        modelo: "A3",
-        validade: "3 anos",
-        midia: "Cartão",
-        categoria: "e-CNPJ",
-      },
-    },
-    {
-      name: "Certificado Digital e-CNPJ A3 - 3 anos (Cartão + Leitora)",
-      description:
-        "Certificado digital para pessoa jurídica A3 com validade de 3 anos. Kit completo com cartão e leitora para uso empresarial.",
-      price: 44000, // R$ 440,00
-      metadata: {
-        tipo: "PJ",
-        modelo: "A3",
-        validade: "3 anos",
-        midia: "Cartão + Leitora",
-        categoria: "e-CNPJ",
-      },
-    },
-    {
-      name: "Certificado Digital e-CNPJ A3 - 3 anos (Token)",
-      description:
-        "Certificado digital para pessoa jurídica A3 com validade de 3 anos. Token USB premium empresarial, máxima durabilidade.",
-      price: 44000, // R$ 440,00
-      metadata: {
-        tipo: "PJ",
-        modelo: "A3",
-        validade: "3 anos",
-        midia: "Token",
-        categoria: "e-CNPJ",
-      },
-    },
-  ]
-
   console.log("Iniciando criação dos produtos VixCert...")
 
   for (const product of products) {
     try {
+      const name = generateProductName(product)
+      const description = generateProductDescription(product)
+      const priceInCents = Number.parseInt(product.Preco_R$) * 100
+
+      console.log(`Criando produto: ${name}`)
+
+      // Criar produto no Stripe
       const stripeProduct = await stripe.products.create({
-        name: product.name,
-        description: product.description,
-        metadata: product.metadata,
+        name: name,
+        description: description,
+        metadata: {
+          tipo: product.Tipo,
+          modelo: product.Modelo,
+          validade: product.Validade,
+          midia: product.Midia,
+          preco_original: product.Preco_R$,
+        },
       })
 
+      // Criar preço para o produto
       const stripePrice = await stripe.prices.create({
         product: stripeProduct.id,
-        unit_amount: product.price,
+        unit_amount: priceInCents,
         currency: "brl",
       })
 
-      console.log(`✅ Produto criado: ${product.name} - R$ ${(product.price / 100).toFixed(2)}`)
+      // Atualizar produto com preço padrão
+      await stripe.products.update(stripeProduct.id, {
+        default_price: stripePrice.id,
+      })
+
+      console.log(`✅ Produto criado: ${name} - R$ ${product.Preco_R$}`)
     } catch (error) {
-      console.error(`❌ Erro ao criar produto ${product.name}:`, error)
+      console.error(`❌ Erro ao criar produto ${generateProductName(product)}:`, error)
     }
   }
 
-  console.log("Criação de produtos concluída!")
+  console.log("Finalizada a criação dos produtos VixCert!")
 }
 
+// Executar o script
 createVixCertProducts().catch(console.error)
